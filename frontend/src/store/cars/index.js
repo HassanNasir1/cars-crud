@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { API_URL } from 'src/configs/endpoint'
-import { accessToken } from 'src/configs/endpoint'
 
 // ** Axios Imports
 import axios from 'axios'
+import axiosInstance from 'src/configs/axiosInstance';
 
 export const getCarsCount = async () => {
   try {
@@ -35,11 +35,8 @@ export const fetchDropdownCategories = async () => {
 
 // ** Fetch Countries
 export const fetchData = createAsyncThunk('car/fetchData', async params => {
-  const response = await axios.get(`${API_URL.url}/api/cars`, {
+  const response = await axiosInstance.get(`${API_URL.url}/api/cars`, {
     params
-    // headers: {
-    //   Authorization: `Bearer ${accessToken}`
-    // }
   })
   return response.data
 })
@@ -47,7 +44,7 @@ export const fetchData = createAsyncThunk('car/fetchData', async params => {
 // ** Add Category
 export const addCar = createAsyncThunk('car/addCar', async (data, { getState, dispatch, rejectWithValue }) => {
   try {
-    const response = await axios.post(`${API_URL.url}/api/cars`, data.data);
+    const response = await axiosInstance.post(`${API_URL.url}/api/cars`, data.data);
     dispatch(fetchData(getState().cars.params));
     return response;
   } catch (error) {
@@ -70,7 +67,7 @@ export const editCar = createAsyncThunk(
     const { id, ...carData } = data
 
     try {
-      const response = await axios.patch(`${API_URL.url}/api/cars/${id}`, carData?.data)
+      const response = await axiosInstance.patch(`${API_URL.url}/api/cars/${id}`, carData?.data)
       dispatch(fetchData(getState().cars.params))
       return response
     } catch (error) {
@@ -90,10 +87,7 @@ export const editCar = createAsyncThunk(
 export const deleteCar = createAsyncThunk('car/deleteCar', async (data, { getState, dispatch }) => {
   const { id } = data
 
-  const response = await axios.delete(`${API_URL.url}/api/cars/${id}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
+  const response = await axiosInstance.delete(`${API_URL.url}/api/cars/${id}`, {
   })
 
   dispatch(fetchData(getState().cars.params))

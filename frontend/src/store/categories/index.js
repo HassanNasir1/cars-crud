@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { API_URL } from 'src/configs/endpoint'
 import { accessToken } from 'src/configs/endpoint'
+import axiosInstance from 'src/configs/axiosInstance'
 
 // ** Axios Imports
 import axios from 'axios'
 
 // ** Fetch Countries
 export const fetchData = createAsyncThunk('category/fetchData', async params => {
-  const response = await axios.get(`${API_URL.url}/api/categories`, {
+  const response = await axiosInstance.get(`${API_URL.url}/api/categories`, {
     params
     // headers: {
     //   Authorization: `Bearer ${accessToken}`
@@ -21,7 +22,7 @@ export const addCategory = createAsyncThunk(
   'category/addCategory',
   async (data, { getState, dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL.url}/api/categories`, data.data)
+      const response = await axiosInstance.post(`${API_URL.url}/api/categories`, data.data)
       dispatch(fetchData(getState().categories.params))
       return response
     } catch (error) {
@@ -44,7 +45,7 @@ export const editCategory = createAsyncThunk(
     const { id, ...categoryData } = data
 
     try {
-      const response = await axios.patch(`${API_URL.url}/api/categories/${id}`, categoryData?.data)
+      const response = await axiosInstance.patch(`${API_URL.url}/api/categories/${id}`, categoryData?.data)
       dispatch(fetchData(getState().categories.params))
       return response
     } catch (error) {
@@ -64,7 +65,7 @@ export const editCategory = createAsyncThunk(
 export const deleteCategory = createAsyncThunk('category/deleteCategory', async (data, { getState, dispatch }) => {
   const { id } = data
 
-  const response = await axios.delete(`${API_URL.url}/api/categories/${id}`, {
+  const response = await axiosInstance.delete(`${API_URL.url}/api/categories/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
