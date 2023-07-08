@@ -13,13 +13,15 @@ router.get("/dropdown", async (req, res) => {
     res.status(200).json(categories);
   } catch (error) {
     console.error("Error retrieving categories:", error);
-    res.status(500).json({ error: "An error occurred while retrieving categories" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving categories" });
   }
 });
 
 // CRUD operations for categories
 // Create a category
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   try {
     const { name } = req.body;
 
@@ -58,7 +60,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get all categories
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     const { sortBy, sortOrder, page, limit } = req.query;
 
@@ -96,7 +98,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get a category by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -117,7 +119,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update a category
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
@@ -159,7 +161,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // Delete a category
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -178,6 +180,5 @@ router.delete("/:id", async (req, res) => {
       .json({ error: "An error occurred while deleting the category" });
   }
 });
-
 
 module.exports = router;
