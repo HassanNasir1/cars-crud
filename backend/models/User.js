@@ -7,10 +7,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true, // Convert email to lowercase
     trim: true, // Remove extra whitespaces
-    // match: [
-    //   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    //   "Please provide a valid email",
-    // ], // Email format validation
+    match: [
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Please provide a valid email",
+    ], // Email format validation
   },
   fullName: {
     type: String,

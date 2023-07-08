@@ -4,84 +4,67 @@ const bcrypt = require("bcrypt");
 const transporter = require("../email");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
 
 // Signup route
-router.post(
-  "/signup",
-  [
-    body("email").isEmail().normalizeEmail(),
+router.post("/signup", async (req, res) => {
+  const { email } = req.body;
 
-    // Add more validation rules as per your requirements
-  ],
-  async (req, res) => {
-    const { email } = req.body;
+  try {
+    // Generate a random OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-    try {
-      // Validate input
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
 
-      // Generate a random OTP
-      const otp = Math.floor(100000 + Math.random() * 900000);
+    if (existingUser) {
+      // User already exists, send the OTP for login
+      // Send login OTP email
+      const hashedOTP = await bcrypt.hash(otp.toString(), 10);
+      existingUser.isOTPUsed = false;
+      existingUser.otp = hashedOTP;
+      existingUser.save();
+      const mailOptions = {
+        from: "merntask@gmail.com",
+        to: email,
+        subject: "Login OTP",
+        text: `Your login OTP is: ${otp}`,
+      };
 
-      // Check if the user already exists
-      const existingUser = await User.findOne({ email });
+      await transporter.sendMail(mailOptions);
 
-      if (existingUser) {
-        // User already exists, send the OTP for login
-        // Send login OTP email
-        const hashedOTP = await bcrypt.hash(otp.toString(), 10);
-        existingUser.isOTPUsed = false;
-        existingUser.otp = hashedOTP;
-        existingUser.save();
-        const mailOptions = {
-          from: "merntask@gmail.com",
-          to: email,
-          subject: "Login OTP",
-          text: `Your login OTP is: ${otp}`,
-        };
+      res.status(200).json({ message: "Login OTP sent" });
+    } else {
+      // User does not exist, create a new account with the OTP
+      // Hash the OTP
+      const hashedOTP = await bcrypt.hash(otp.toString(), 10);
 
-        await transporter.sendMail(mailOptions);
-        console.log("Login OTP sent");
+      // Save the user to the database with the hashed OTP
+      const newUser = new User({
+        email,
+        otp: hashedOTP,
+        username: email,
+        fullName: email.split("@")[0],
+        role: "admin",
+      });
+      await newUser.save();
 
-        res.status(200).json({ message: "Login OTP sent" });
-      } else {
-        // User does not exist, create a new account with the OTP
-        // Hash the OTP
-        const hashedOTP = await bcrypt.hash(otp.toString(), 10);
+      // Send welcome email with OTP
+      const mailOptions = {
+        from: "merntask@gmail.com",
+        to: email,
+        subject: "Welcome to our App",
+        text: `Welcome, ${email}! Thank you for signing up. Your OTP is: ${otp}`,
+      };
 
-        // Save the user to the database with the hashed OTP
-        const newUser = new User({
-          email,
-          otp: hashedOTP,
-          username: email,
-          fullName: email.split("@")[0],
-          role: "admin",
-        });
-        await newUser.save();
+      await transporter.sendMail(mailOptions);
+      console.log("Welcome email sent");
 
-        // Send welcome email with OTP
-        const mailOptions = {
-          from: "merntask@gmail.com",
-          to: email,
-          subject: "Welcome to our App",
-          text: `Welcome, ${email}! Thank you for signing up. Your OTP is: ${otp}`,
-        };
-
-        await transporter.sendMail(mailOptions);
-        console.log("Welcome email sent");
-
-        res.status(201).json({ message: "User signed up successfully" });
-      }
-    } catch (error) {
-      console.error("Error signing up user:", error);
-      res.status(500).json({ error: "An error occurred while signing up" });
+      res.status(201).json({ message: "User signed up successfully" });
     }
+  } catch (error) {
+    res.status(500).json(error.message);
   }
-);
+});
 
 // Login route
 router.post("/login", async (req, res) => {
@@ -120,6 +103,33 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ error: "An error occurred during login" });
+  }
+});
+
+// /me route
+router.get("/me", async (req, res) => {
+  try {
+    // Get the token from the request headers
+    const token = req.headers.authorization;
+
+    // Decode the token to get the userId
+    const decodedToken = jwt.verify(token, "your_secret_key");
+    const userId = decodedToken.userId;
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Return the complete userData
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching user data" });
   }
 });
 

@@ -1,5 +1,5 @@
 export default {
-  meEndpoint: 'http://localhost:3000/api/auth/login',
+  meEndpoint: 'http://localhost:3000/api/auth/me',
   loginEndpoint: 'http://localhost:3000/api/auth/login',
   registerEndpoint: '/jwt/register',
   storageTokenKeyName: 'accessToken',

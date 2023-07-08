@@ -65,9 +65,7 @@ const AuthProvider = ({ children }) => {
     axios
       .post(authConfig.loginEndpoint, params)
       .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token)
-          : null
+        params.rememberMe ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token) : null
         const returnUrl = router.query.returnUrl
         setUser({ ...response.data.user })
         params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.user)) : null
