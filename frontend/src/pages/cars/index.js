@@ -39,7 +39,7 @@ const Categories = () => {
   const [loading, setLoading] = useState(false)
 
   const [queryOptions, setQueryOptions] = useState({
-    direction: 1,
+    direction: 'desc',
     column: 'createdAt'
   })
 
