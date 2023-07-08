@@ -6,7 +6,7 @@ const Car = require("../models/car");
 const Category = require("../models/category");
 
 // Create a car
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   try {
     const { category, color, model, make, registrationNo, name } = req.body;
 
@@ -51,13 +51,13 @@ router.get("/count", async (req, res) => {
 });
 
 // Get all cars
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     const { sortBy, sortOrder, page, limit } = req.query;
 
     const sortOptions = {};
     if (sortBy && sortOrder) {
-      sortOptions[sortBy] = sortOrder === "desc" ? -1 : 1;
+      sortOptions[sortBy] = sortOrder === "asc" ? 1 : -1;
     }
 
     const pageNumber = parseInt(page) || 1;
@@ -70,13 +70,13 @@ router.get("/", async (req, res) => {
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .populate({
-        path: 'category',
+        path: "category",
       })
       .lean()
       .exec();
 
     res.status(200).json({
-      cars: cars.map(car => ({
+      cars: cars.map((car) => ({
         ...car,
         categoryData: car.category, // Assign complete category data to categoryData field
         category: car.category ? car.category._id : null, // Assign category ID to category field
@@ -95,12 +95,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-
-
-
-
 // Get a car by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -122,7 +118,7 @@ router.get("/:id", async (req, res) => {
 
 // Update a car
 // Update a car
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const { category, color, model, make, registrationNo, name } = req.body;
@@ -141,7 +137,6 @@ router.patch("/:id", async (req, res) => {
     car.make = make;
     car.registrationNo = registrationNo;
     car.name = name;
-
 
     // Validate the updated car data
     const validationError = car.validateSync();
@@ -169,7 +164,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // Delete a car
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
