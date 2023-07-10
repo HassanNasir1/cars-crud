@@ -7,7 +7,7 @@ import axiosInstance from 'src/configs/axiosInstance';
 
 export const getCarsCount = async () => {
   try {
-    const response = await axios.get(`${API_URL.url}/api/cars`);
+    const response = await axios.get(`${API_URL.url}/api/cars/count`);
     const totalCars = response.data.totalCars;
     return totalCars;
     // Do something with the totalCars count
