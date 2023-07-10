@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/login/index.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/login/index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// ** React Imports
+import { useState } from 'react'
+
+// ** Next Imports
+import Link from 'next/link'
+
+// ** MUI Components
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Checkbox from '@mui/material/Checkbox'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import Box from '@mui/material/Box'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { styled, useTheme } from '@mui/material/styles'
+import InputAdornment from '@mui/material/InputAdornment'
+import MuiFormControlLabel from '@mui/material/FormControlLabel'
+
+// ** Custom Component Import
+import CustomTextField from 'src/@core/components/mui/text-field'
+
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+
+// ** Third Party Imports
+import * as yup from 'yup'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+import useBgColor from 'src/@core/hooks/useBgColor'
+import { useSettings } from 'src/@core/hooks/useSettings'
+
+// ** Configs
+import themeConfig from 'src/configs/themeConfig'
+
+// ** Layout Import
+import BlankLayout from 'src/@core/layouts/BlankLayout'
+
+// ** Demo Imports
+import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+
+// ** Styled Components
+const LoginIllustration = styled('img')(({ theme }) => ({
+  zIndex: 2,
+  maxHeight: 680,
+  marginTop: theme.spacing(12),
+  marginBottom: theme.spacing(12),
+  [theme.breakpoints.down(1540)]: {
+    maxHeight: 550
+  },
+  [theme.breakpoints.down('lg')]: {
+    maxHeight: 500
+  }
+}))
+
+const RightWrapper = styled(Box)(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: 450
+  },
+  [theme.breakpoints.up('lg')]: {
+    maxWidth: 600
+  },
+  [theme.breakpoints.up('xl')]: {
+    maxWidth: 750
+  }
+}))
+
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: `${theme.palette.primary.main} !important`
+}))
+
+const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
+  '&amp; .MuiFormControlLabel-label': {
+    color: theme.palette.text.secondary
+  }
+}))
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  otp: yup.string().min(3).required()
+})
+
+// const defaultValues = {
+//   password: 'admin',
+//   email: 'admin@vuexy.com'
+// }
+
+/**
+ * LoginPage component for the login page.
+ * @component
+ * @returns {JSX.Element} LoginPage component.
+ */
+const LoginPage = () => {
+  const [rememberMe, setRememberMe] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
+
+  // ** Hooks
+  const auth = useAuth()
+  const theme = useTheme()
+  const bgColors = useBgColor()
+  const { settings } = useSettings()
+  const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
+  // ** Vars
+  const { skin } = settings
+
+  const {
+    control,
+    setError,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    // defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
+
+  /**
+   * Handles form submission.
+   * @param {Object} data - Form data.
+   * @param {Object} event - Form submission event.
+   */
+  const onSubmit = (data, event) => {
+    event.preventDefault()
+    const { email, otp } = data
+    auth.login({ email, otp, rememberMe }, () => {
+      setError('email', {
+        type: 'manual',
+        message: 'Email or OTP is invalid'
+      })
+    })
+  }
+  const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
+
+  return (
+    &lt;Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
+      {!hidden ? (
+        &lt;Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            position: 'relative',
+            alignItems: 'center',
+            borderRadius: '20px',
+            justifyContent: 'center',
+            backgroundColor: 'customColors.bodyBg',
+            margin: theme => theme.spacing(8, 0, 8, 8)
+          }}
+        >
+          &lt;LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} />
+          &lt;FooterIllustrationsV2 />
+        &lt;/Box>
+      ) : null}
+      &lt;RightWrapper>
+        &lt;Box
+          sx={{
+            p: [6, 12],
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          &lt;Box sx={{ width: '100%', maxWidth: 400 }}>
+            &lt;Box sx={{ my: 6 }}>
+              &lt;Typography variant='h3' sx={{ mb: 1.5 }}>
+                {`Welcome to ${themeConfig.templateName}! 👋🏻`}
+              &lt;/Typography>
+              &lt;Typography sx={{ color: 'text.secondary' }}>Please sign-in to your account&lt;/Typography>
+            &lt;/Box>
+            &lt;form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+              &lt;Box sx={{ mb: 4 }}>
+                &lt;Controller
+                  name='email'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    &lt;CustomTextField
+                      fullWidth
+                      autoFocus
+                      label='Email'
+                      value={value}
+                      onBlur={onBlur}
+                      onChange={onChange}
+                      // placeholder='admin@vuexy.com'
+                      error={Boolean(errors.email)}
+                      {...(errors.email &amp;&amp; { helperText: errors.email.message })}
+                    />
+                  )}
+                />
+              &lt;/Box>
+              &lt;Box sx={{ mb: 1.5 }}>
+                &lt;Controller
+                  name='otp'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    &lt;CustomTextField
+                      fullWidth
+                      value={value}
+                      onBlur={onBlur}
+                      label='OTP'
+                      onChange={onChange}
+                      id='auth-login-v2-otp'
+                      error={Boolean(errors.otp)}
+                      {...(errors.otp &amp;&amp; { helperText: errors.otp.message })}
+                      type={showPassword ? 'text' : 'password'}
+                      InputProps={{
+                        endAdornment: (
+                          &lt;InputAdornment position='end'>
+                            &lt;IconButton
+                              edge='end'
+                              onMouseDown={e => e.preventDefault()}
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              &lt;Icon fontSize='1.25rem' icon={showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                            &lt;/IconButton>
+                          &lt;/InputAdornment>
+                        )
+                      }}
+                    />
+                  )}
+                />
+              &lt;/Box>
+              &lt;Box
+                sx={{
+                  mb: 1.75,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                &lt;FormControlLabel
+                  label='Remember Me'
+                  control={&lt;Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />}
+                />
+                &lt;Typography component={LinkStyled} href='/forgot-password'>
+                  Forgot Password?
+                &lt;/Typography>
+              &lt;/Box>
+              &lt;Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
+                Login
+              &lt;/Button>
+              &lt;Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+                &lt;Typography sx={{ color: 'text.secondary', mr: 2 }}>New on our platform?&lt;/Typography>
+                &lt;Typography href='/register' component={LinkStyled}>
+                  Create an account
+                &lt;/Typography>
+              &lt;/Box>
+            &lt;/form>
+          &lt;/Box>
+        &lt;/Box>
+      &lt;/RightWrapper>
+    &lt;/Box>
+  )
+}
+
+/**
+ * Returns the layout for the LoginPage component.
+ * @param {JSX.Element} page - The LoginPage component.
+ * @returns {JSX.Element} Layout for the LoginPage component.
+ */
+LoginPage.getLayout = page => &lt;BlankLayout>{page}&lt;/BlankLayout>
+// Indicates that this route doesn't require authentication
+LoginPage.guestGuard = true
+
+export default LoginPage
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddCarForm.html">AddCarForm</a></li><li><a href="AddCategoryForm.html">AddCategoryForm</a></li><li><a href="Cars.html">Cars</a></li><li><a href="Categories.html">Categories</a></li><li><a href="ConfirmationModal.html">ConfirmationModal</a></li><li><a href="Datatable.html">Datatable</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MyDashboard.html">MyDashboard</a></li><li><a href="Register.html">Register</a></li><li><a href="TableHeader.html">TableHeader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#defineRulesFor">defineRulesFor</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#getHomeRoute">getHomeRoute</a></li><li><a href="global.html#handleURLQueries">handleURLQueries</a></li><li><a href="global.html#hasActiveChild">hasActiveChild</a></li><li><a href="global.html#hexToRGBA">hexToRGBA</a></li><li><a href="global.html#organizeIconsList">organizeIconsList</a></li><li><a href="global.html#removeChildren">removeChildren</a></li><li><a href="global.html#removeMetaData">removeMetaData</a></li><li><a href="global.html#rgbaToHex">rgbaToHex</a></li><li><a href="global.html#themeConfig">themeConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Jul 11 2023 00:30:06 GMT+0500 (Pakistan Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: configs/acl.js</title>
+    <title>JSDoc: Source: pages/my-dashboard/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: configs/acl.js</h1>
+    <h1 class="page-title">Source: pages/my-dashboard/index.js</h1>
 
     
 
@@ -26,42 +26,50 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { AbilityBuilder, Ability } from '@casl/ability'
-
-export const AppAbility = Ability
+            <pre class="prettyprint source linenums"><code>import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical';
+import { getCarsCount } from 'src/store/cars';
+import { useEffect, useState } from 'react';
 
 /**
- * Please define your own Ability rules according to your app requirements.
- * We have just shown Admin and Client rules for demo purpose where
- * admin can manage everything and client can just visit ACL page
+ * MyDashboard component for displaying the dashboard.
+ * @component
+ * @returns {JSX.Element} MyDashboard component.
  */
-const defineRulesFor = (role, subject) => {
-  const { can, rules } = new AbilityBuilder(AppAbility)
-  if (role === 'admin') {
-    can('manage', 'all')
-  } else if (role === 'client') {
-    can(['read'], 'acl-page')
-  } else {
-    can(['read', 'create', 'update', 'delete'], subject)
-  }
+const MyDashboard = () => {
+  const [count, setCount] = useState();
 
-  return rules
-}
+  useEffect(() => {
+    getCarsCount()
+      .then(response => {
+        setCount(response);
+      })
+      .catch(error => {
+        console.error('Error retrieving total car count:', error);
+        // Handle the error
+      });
+  }, []);
 
-export const buildAbilityFor = (role, subject) => {
-  return new AppAbility(defineRulesFor(role, subject), {
-    // https://casl.js.org/v5/en/guide/subject-type-detection
-    // @ts-ignore
-    detectSubjectType: object => object.type
-  })
-}
+  return (
+    &lt;Grid container spacing={6}>
+      &lt;Grid item xs={6} sm={4} lg={2}>
+        &lt;CardStatsVertical
+          chipText={count}
+          chipColor='default'
+          avatarColor='error'
+          title='Registered Cars'
+          avatarIcon='tabler:car'
+        />
+      &lt;/Grid>
+    &lt;/Grid>
+  );
+};
 
-export const defaultACLObj = {
-  action: 'manage',
-  subject: 'all'
-}
-
-export default defineRulesFor
+export default MyDashboard;
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: configs/acl.js</title>
+    <title>JSDoc: Class: MyDashboard</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,54 +17,159 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: configs/acl.js</h1>
+    <h1 class="page-title">Class: MyDashboard</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import { AbilityBuilder, Ability } from '@casl/ability'
+        <h2><span class="attribs"><span class="type-signature"></span></span>MyDashboard<span class="signature">()</span><span class="type-signature"> &rarr; {JSX.Element}</span></h2>
+        
+    
+</header>
 
-export const AppAbility = Ability
+<article>
+    <div class="container-overview">
+    
+        
 
-/**
- * Please define your own Ability rules according to your app requirements.
- * We have just shown Admin and Client rules for demo purpose where
- * admin can manage everything and client can just visit ACL page
- */
-const defineRulesFor = (role, subject) => {
-  const { can, rules } = new AbilityBuilder(AppAbility)
-  if (role === 'admin') {
-    can('manage', 'all')
-  } else if (role === 'client') {
-    can(['read'], 'acl-page')
-  } else {
-    can(['read', 'create', 'update', 'delete'], subject)
-  }
+    
 
-  return rules
-}
+    
+    <h4 class="name" id="MyDashboard"><span class="type-signature"></span>new MyDashboard<span class="signature">()</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    
 
-export const buildAbilityFor = (role, subject) => {
-  return new AppAbility(defineRulesFor(role, subject), {
-    // https://casl.js.org/v5/en/guide/subject-type-detection
-    // @ts-ignore
-    detectSubjectType: object => object.type
-  })
-}
+    
 
-export const defaultACLObj = {
-  action: 'manage',
-  subject: 'all'
-}
 
-export default defineRulesFor
-</code></pre>
-        </article>
-    </section>
+
+<div class="description">
+    <p>MyDashboard component for displaying the dashboard.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="pages_my-dashboard_index.js.html">pages/my-dashboard/index.js</a>, <a href="pages_my-dashboard_index.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>MyDashboard component.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSX.Element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
