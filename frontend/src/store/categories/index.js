@@ -10,10 +10,12 @@ import axios from 'axios'
 export const fetchData = createAsyncThunk('category/fetchData', async params => {
   const response = await axiosInstance.get(`${API_URL.url}/api/categories`, {
     params
+
     // headers: {
     //   Authorization: `Bearer ${accessToken}`
     // }
   })
+
   return response.data
 })
 
@@ -24,6 +26,7 @@ export const addCategory = createAsyncThunk(
     try {
       const response = await axiosInstance.post(`${API_URL.url}/api/categories`, data.data)
       dispatch(fetchData(getState().categories.params))
+
       return response
     } catch (error) {
       if (error.response) {
@@ -47,6 +50,7 @@ export const editCategory = createAsyncThunk(
     try {
       const response = await axiosInstance.patch(`${API_URL.url}/api/categories/${id}`, categoryData?.data)
       dispatch(fetchData(getState().categories.params))
+
       return response
     } catch (error) {
       if (error.response) {

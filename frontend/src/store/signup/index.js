@@ -9,9 +9,11 @@ export const signup = async email => {
     const response = await axios.post(`${API_URL.url}/api/auth/signup`, {
       email: email
     })
+
     return response
   } catch (error) {
     console.log(error)
+
     return error
   }
 }

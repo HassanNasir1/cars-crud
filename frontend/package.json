@@ -9,7 +9,8 @@
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
-    "build:icons": "node src/iconify-bundle/bundle-icons-react.js"
+    "build:icons": "node src/iconify-bundle/bundle-icons-react.js",
+    "docs": "jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
     "@babel/core": "7.21.5",
@@ -40,6 +41,7 @@
     "axios": "1.4.0",
     "axios-mock-adapter": "1.21.4",
     "babel-eslint": "10.1.0",
+    "better-docs": "^2.7.2",
     "bootstrap-icons": "1.10.5",
     "chart.js": "4.3.0",
     "cleave.js": "1.6.0",
@@ -51,6 +53,7 @@
     "i18next": "22.4.15",
     "i18next-browser-languagedetector": "7.0.1",
     "i18next-http-backend": "2.2.0",
+    "jsdoc": "^4.0.2",
     "jsonwebtoken": "8.5.1",
     "keen-slider": "6.8.5",
     "next": "13.3.2",

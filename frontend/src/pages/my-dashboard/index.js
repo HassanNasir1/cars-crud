@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 
 //this is a test comment
 const MyDashboard = () => {
-  const [count, setCount] = useState();
+  const [count, setCount] = useState()
 
   useEffect(() => {
     getCarsCount()
@@ -19,9 +19,11 @@ const MyDashboard = () => {
       })
       .catch(error => {
         console.error('Error retrieving total car count:', error)
+
         // Handle the error
       })
   }, [])
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={6} sm={4} lg={2}>

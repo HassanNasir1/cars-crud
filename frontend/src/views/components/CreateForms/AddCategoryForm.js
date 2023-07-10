@@ -44,7 +44,16 @@ const schema = yup.object().shape({
     .min(3, obj => showErrors('name', obj.value.length, obj.min))
     .required()
 })
-
+/**
+ * AddCategoryForm Component
+ * Renders a form for adding or editing a category
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} props.addBtnText - Text for the submit button ("Add" or "Edit")
+ * @param {function} props.handleClose - Function to handle form close
+ * @returns {JSX.Element} AddCategoryForm component
+ */
 const AddCategoryForm = ({ addBtnText, handleClose }) => {
   const [loading, setLoading] = useState(false)
   const row = useSelector(state => state.categories.selected)
@@ -83,7 +92,6 @@ const AddCategoryForm = ({ addBtnText, handleClose }) => {
     } else {
       setLoading(true)
       dispatch(addCategory({ data })).then(response => {
-
         if (response.payload?.status == 201 || response.payload?.status == 200) {
           setLoading(false)
           toast.success('Category Data added Successfully')

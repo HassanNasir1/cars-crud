@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: views/components/CreateForms/AddCarForm.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: views/components/CreateForms/AddCarForm.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// ** React Imports
+import { useEffect, useState } from 'react'
+
+// ** MUI Imports
+import Card from '@mui/material/Card'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+import CardHeader from '@mui/material/CardHeader'
+import IconButton from '@mui/material/IconButton'
+import CardContent from '@mui/material/CardContent'
+import InputAdornment from '@mui/material/InputAdornment'
+import CircularProgress from '@mui/material/CircularProgress'
+import Box from '@mui/material/Box'
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
+
+// ** Custom Component Import
+import CustomTextField from 'src/@core/components/mui/text-field'
+
+// ** Third Party Imports
+import * as yup from 'yup'
+import toast from 'react-hot-toast'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+import { addCar, editCar, fetchDropdownCategories } from 'src/store/cars'
+import { useDispatch, useSelector } from 'react-redux'
+
+const showErrors = (field, valueLen, min, max) => {
+  if (valueLen === 0) {
+    return `${field} field is required`
+  } else if (valueLen > 0 &amp;&amp; valueLen &lt; min) {
+    return `${field} must be at least ${min} characters`
+  } else if (valueLen > 0 &amp;&amp; valueLen > max) {
+    return `${field} must not be greater then ${max} characters`
+  } else {
+    return ''
+  }
+}
+
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .min(3, obj => showErrors('name', obj.value.length, obj.min))
+    .required(),
+  color: yup
+    .string()
+    .min(3, obj => showErrors('color', obj.value.length, obj.min))
+    .required(),
+  model: yup
+    .string()
+    .min(3, obj => showErrors('model', obj.value.length, obj.min))
+    .required(),
+  make: yup
+    .string()
+    .min(3, obj => showErrors('make', obj.value.length, obj.min))
+    .required(),
+  registrationNo: yup
+    .string()
+    .min(3, obj => showErrors('registrationNo', obj.value.length, obj.min))
+    .required(),
+  category: yup.string().required('Category must be selected')
+})
+
+/**
+ * AddCarForm Component
+ * Renders a form for adding or editing a car
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} props.addBtnText - Text for the submit button ("Add" or "Edit")
+ * @param {function} props.handleClose - Function to handle form close
+ * @returns {JSX.Element} AddCarForm component
+ */
+const AddCarForm = ({ addBtnText, handleClose }) => {
+  const [loading, setLoading] = useState(false)
+  const row = useSelector(state => state.cars.selected)
+  const dispatch = useDispatch()
+
+  const [categories, setCategories] = useState([])
+
+  const defaultValues = {
+    name: row ? row?.name : '',
+    color: row ? row?.color : '',
+    model: row ? row?.model : '',
+    make: row ? row?.make : '',
+    registrationNo: row ? row?.registrationNo : '',
+    category: row ? row.category : ''
+  }
+
+  // ** Hook
+
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch
+  } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema)
+  })
+
+  const selectedCategory = watch('category')
+
+  useEffect(() => {
+    fetchDropdownCategories().then(response => {
+      setCategories(response.data)
+    })
+  }, [selectedCategory, row])
+
+  const handleCategoryChange = e => {
+    const category = e.target.value
+    setValue('category', category)
+  }
+
+  const onSubmit = data => {
+    if (row) {
+      setLoading(true)
+      dispatch(editCar({ data, id: row?._id })).then(response => {
+        if (response.payload?.status == 200 || response.payload?.status == 201) {
+          setLoading(false)
+          handleClose()
+          toast.success('Car Data updated Successfully')
+        } else {
+          setLoading(false)
+          toast.error(response.payload)
+        }
+      })
+    } else {
+      setLoading(true)
+      dispatch(addCar({ data })).then(response => {
+        if (response.payload?.status == 201 || response.payload?.status == 200) {
+          setLoading(false)
+          toast.success('Car Data added Successfully')
+          handleClose()
+        } else {
+          setLoading(false)
+          toast.error(response.payload)
+        }
+      })
+    }
+  }
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}>
+      &lt;Grid container spacing={5}>
+        &lt;Grid item xs={12} md={6}>
+          &lt;Controller
+            name='name'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              &lt;CustomTextField
+                fullWidth
+                value={value}
+                label='Category Name'
+                onChange={onChange}
+                error={Boolean(errors.name)}
+                aria-describedby='validation-schema-name'
+                {...(errors.name &amp;&amp; { helperText: errors.name.message })}
+              />
+            )}
+          />
+        &lt;/Grid>
+        &lt;Grid item xs={12} md={6}>
+          &lt;Controller
+            name='color'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              &lt;CustomTextField
+                fullWidth
+                value={value}
+                label='Color'
+                onChange={onChange}
+                error={Boolean(errors.color)}
+                aria-describedby='validation-schema-name'
+                {...(errors.color &amp;&amp; { helperText: errors.color.message })}
+              />
+            )}
+          />
+        &lt;/Grid>
+        &lt;Grid item xs={12} md={6}>
+          &lt;Controller
+            name='model'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              &lt;CustomTextField
+                fullWidth
+                value={value}
+                label='Model'
+                onChange={onChange}
+                error={Boolean(errors.model)}
+                aria-describedby='validation-schema-name'
+                {...(errors.model &amp;&amp; { helperText: errors.model.message })}
+              />
+            )}
+          />
+        &lt;/Grid>
+        &lt;Grid item xs={12} md={6}>
+          &lt;Controller
+            name='make'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              &lt;CustomTextField
+                fullWidth
+                value={value}
+                label='Make'
+                onChange={onChange}
+                error={Boolean(errors.make)}
+                aria-describedby='validation-schema-name'
+                {...(errors.make &amp;&amp; { helperText: errors.make.message })}
+              />
+            )}
+          />
+        &lt;/Grid>
+        &lt;Grid item xs={12} md={6}>
+          &lt;Controller
+            name='registrationNo'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              &lt;CustomTextField
+                fullWidth
+                value={value}
+                label='Registration No'
+                onChange={onChange}
+                error={Boolean(errors.registrationNo)}
+                aria-describedby='validation-schema-name'
+                {...(errors.registrationNo &amp;&amp; { helperText: errors.registrationNo.message })}
+              />
+            )}
+          />
+        &lt;/Grid>
+        &lt;Grid item xs={12} sm={6}>
+          &lt;Controller
+            name='category'
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              &lt;FormControl fullWidth error={Boolean(errors.category)}>
+                &lt;InputLabel id='category-label'>Category&lt;/InputLabel>
+                &lt;Select {...field} label='Category' labelId='category-label' onChange={handleCategoryChange}>
+                  {categories.map(category => (
+                    &lt;MenuItem key={category._id} value={category._id}>
+                      {category.name}
+                    &lt;/MenuItem>
+                  ))}
+                &lt;/Select>
+                {errors.category &amp;&amp; &lt;FormHelperText>Please select a category&lt;/FormHelperText>}
+              &lt;/FormControl>
+            )}
+          />
+        &lt;/Grid>
+
+        {loading ? (
+          &lt;Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px', marginLeft: '50%' }}>
+            &lt;CircularProgress />
+          &lt;/Box>
+        ) : (
+          &lt;Grid item sx={{ marginLeft: '42%' }}>
+            &lt;Button type='submit' variant='contained'>
+              {row ? `Edit ${addBtnText}` : `Add ${addBtnText}`}
+            &lt;/Button>
+          &lt;/Grid>
+        )}
+      &lt;/Grid>
+    &lt;/form>
+  )
+}
+
+export default AddCarForm
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddCarForm.html">AddCarForm</a></li><li><a href="AddCategoryForm.html">AddCategoryForm</a></li><li><a href="ConfirmationModal.html">ConfirmationModal</a></li><li><a href="Datatable.html">Datatable</a></li><li><a href="TableHeader.html">TableHeader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#defineRulesFor">defineRulesFor</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#getHomeRoute">getHomeRoute</a></li><li><a href="global.html#handleURLQueries">handleURLQueries</a></li><li><a href="global.html#hasActiveChild">hasActiveChild</a></li><li><a href="global.html#hexToRGBA">hexToRGBA</a></li><li><a href="global.html#organizeIconsList">organizeIconsList</a></li><li><a href="global.html#removeChildren">removeChildren</a></li><li><a href="global.html#removeMetaData">removeMetaData</a></li><li><a href="global.html#rgbaToHex">rgbaToHex</a></li><li><a href="global.html#themeConfig">themeConfig</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Jul 10 2023 18:47:24 GMT+0500 (Pakistan Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

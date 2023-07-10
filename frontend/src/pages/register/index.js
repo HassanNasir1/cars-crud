@@ -85,6 +85,7 @@ const Register = () => {
   // ** States
   // const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+
   // ** Hooks
   const theme = useTheme()
   const { settings } = useSettings()

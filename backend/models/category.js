@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const categorySchema = new mongoose.Schema(
   {
@@ -7,12 +7,12 @@ const categorySchema = new mongoose.Schema(
       required: true,
       unique: true,
       minlength: 3, // Minimum length of 3 characters
-      maxlength: 50, // Maximum length of 50 characters
-    },
+      maxlength: 50 // Maximum length of 50 characters
+    }
   },
   { timestamps: true }
-);
+)
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = mongoose.model('Category', categorySchema)
 
-module.exports = Category;
+module.exports = Category

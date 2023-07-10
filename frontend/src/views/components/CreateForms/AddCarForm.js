@@ -27,7 +27,6 @@ import Icon from 'src/@core/components/icon'
 import { addCar, editCar, fetchDropdownCategories } from 'src/store/cars'
 import { useDispatch, useSelector } from 'react-redux'
 
-
 const showErrors = (field, valueLen, min, max) => {
   if (valueLen === 0) {
     return `${field} field is required`
@@ -61,9 +60,19 @@ const schema = yup.object().shape({
     .string()
     .min(3, obj => showErrors('registrationNo', obj.value.length, obj.min))
     .required(),
-    category: yup.string().required('Category must be selected')
+  category: yup.string().required('Category must be selected')
 })
 
+/**
+ * AddCarForm Component
+ * Renders a form for adding or editing a car
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} props.addBtnText - Text for the submit button ("Add" or "Edit")
+ * @param {function} props.handleClose - Function to handle form close
+ * @returns {JSX.Element} AddCarForm component
+ */
 const AddCarForm = ({ addBtnText, handleClose }) => {
   const [loading, setLoading] = useState(false)
   const row = useSelector(state => state.cars.selected)
@@ -77,7 +86,7 @@ const AddCarForm = ({ addBtnText, handleClose }) => {
     model: row ? row?.model : '',
     make: row ? row?.make : '',
     registrationNo: row ? row?.registrationNo : '',
-    category: row ? row.category : '',
+    category: row ? row.category : ''
   }
 
   // ** Hook

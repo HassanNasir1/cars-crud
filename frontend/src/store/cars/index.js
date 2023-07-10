@@ -3,92 +3,94 @@ import { API_URL } from 'src/configs/endpoint'
 
 // ** Axios Imports
 import axios from 'axios'
-import axiosInstance from 'src/configs/axiosInstance';
+import axiosInstance from 'src/configs/axiosInstance'
 
 export const getCarsCount = async () => {
   try {
-    const response = await axios.get(`${API_URL.url}/api/cars/count`);
-    const totalCars = response.data.totalCars;
-    return totalCars;
+    const response = await axios.get(`${API_URL.url}/api/cars/count`)
+    const totalCars = response.data.totalCars
+
+    return totalCars
+
     // Do something with the totalCars count
   } catch (error) {
-    console.error('Error retrieving total car count:', error);
+    console.error('Error retrieving total car count:', error)
+
     // Handle the error
-    throw error;
+    throw error
   }
-};
+}
 
 export const fetchDropdownCategories = async () => {
   try {
-    const response = await axios.get(`${API_URL.url}/api/categories/dropdown`);
+    const response = await axios.get(`${API_URL.url}/api/categories/dropdown`)
     console.log(response)
-    return response;
+
+    return response
+
     // Do something with the totalCars count
   } catch (error) {
-    console.error('Error retrieving total categories:', error);
+    console.error('Error retrieving total categories:', error)
+
     // Handle the error
-    throw error;
+    throw error
   }
-};
-
-
+}
 
 // ** Fetch Countries
 export const fetchData = createAsyncThunk('car/fetchData', async params => {
   const response = await axiosInstance.get(`${API_URL.url}/api/cars`, {
     params
   })
+
   return response.data
 })
 
 // ** Add Category
 export const addCar = createAsyncThunk('car/addCar', async (data, { getState, dispatch, rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post(`${API_URL.url}/api/cars`, data.data);
-    dispatch(fetchData(getState().cars.params));
-    return response;
+    const response = await axiosInstance.post(`${API_URL.url}/api/cars`, data.data)
+    dispatch(fetchData(getState().cars.params))
+
+    return response
   } catch (error) {
     if (error.response) {
       // If the error response is received, return the error message
-      return rejectWithValue(error.response.data.error);
+      return rejectWithValue(error.response.data.error)
     } else {
       // If there is a network or other error, throw an error with a generic message
-      throw new Error('An error occurred while adding the category.');
+      throw new Error('An error occurred while adding the category.')
     }
   }
-});
-
+})
 
 // ** Edit Category
 
-export const editCar = createAsyncThunk(
-  'car/editCar',
-  async (data, { getState, dispatch, rejectWithValue }) => {
-    const { id, ...carData } = data
+export const editCar = createAsyncThunk('car/editCar', async (data, { getState, dispatch, rejectWithValue }) => {
+  const { id, ...carData } = data
 
-    try {
-      const response = await axiosInstance.patch(`${API_URL.url}/api/cars/${id}`, carData?.data)
-      dispatch(fetchData(getState().cars.params))
-      return response
-    } catch (error) {
-      if (error.response) {
-        // If the error response is received, return the error message
-        return rejectWithValue(error.response.data.error)
-      } else {
-        // If there is a network or other error, throw an error with a generic message
-        throw new Error('An error occurred while editing the category.')
-      }
+  try {
+    const response = await axiosInstance.patch(`${API_URL.url}/api/cars/${id}`, carData?.data)
+    dispatch(fetchData(getState().cars.params))
+
+    return response
+  } catch (error) {
+    if (error.response) {
+      // If the error response is received, return the error message
+      return rejectWithValue(error.response.data.error)
+    } else {
+      // If there is a network or other error, throw an error with a generic message
+      throw new Error('An error occurred while editing the category.')
     }
   }
-)
+})
 
 // ** Delete Category
 
 export const deleteCar = createAsyncThunk('car/deleteCar', async (data, { getState, dispatch }) => {
   const { id } = data
 
-  const response = await axiosInstance.delete(`${API_URL.url}/api/cars/${id}`, {
-  })
+  const response = await axiosInstance.delete(`${API_URL.url}/api/cars/${id}`, {})
 
   dispatch(fetchData(getState().cars.params))
 

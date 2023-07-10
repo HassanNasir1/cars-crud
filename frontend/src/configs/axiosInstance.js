@@ -3,6 +3,7 @@ import { API_URL } from './endpoint'
 import authConfig from 'src/configs/auth'
 
 const URL = API_URL.url
+
 const axiosInstance = axios.create({
   baseURL: URL
 })

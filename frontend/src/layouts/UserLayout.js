@@ -7,6 +7,7 @@ import Layout from 'src/@core/layouts/Layout'
 // ** Navigation Imports
 import VerticalNavItems from 'src/navigation/vertical'
 import HorizontalNavItems from 'src/navigation/horizontal'
+
 // import ServerSideNavItems from './components/vertical/ServerSideNavItems'
 
 // ** Component Import
@@ -23,6 +24,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 const UserLayout = ({ children, contentHeightFixed }) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings()
+
   // const { menuItems } = ServerSideNavItems()
 
   // ** Vars for server side navigation
