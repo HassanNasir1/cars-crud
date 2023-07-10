@@ -90,6 +90,11 @@ const schema = yup.object().shape({
 //   email: 'admin@vuexy.com'
 // }
 
+/**
+ * LoginPage component for the login page.
+ * @component
+ * @returns {JSX.Element} LoginPage component.
+ */
 const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
@@ -115,6 +120,11 @@ const LoginPage = () => {
     resolver: yupResolver(schema)
   })
 
+  /**
+   * Handles form submission.
+   * @param {Object} data - Form data.
+   * @param {Object} event - Form submission event.
+   */
   const onSubmit = (data, event) => {
     event.preventDefault()
     const { email, otp } = data
@@ -250,7 +260,14 @@ const LoginPage = () => {
     </Box>
   )
 }
+
+/**
+ * Returns the layout for the LoginPage component.
+ * @param {JSX.Element} page - The LoginPage component.
+ * @returns {JSX.Element} Layout for the LoginPage component.
+ */
 LoginPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
+// Indicates that this route doesn't require authentication
 LoginPage.guestGuard = true
 
 export default LoginPage

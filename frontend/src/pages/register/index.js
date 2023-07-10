@@ -81,6 +81,11 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   }
 }))
 
+/**
+ * Register component for the registration page.
+ * @component
+ * @returns {JSX.Element} Register component.
+ */
 const Register = () => {
   // ** States
   // const [showPassword, setShowPassword] = useState(false)
@@ -117,6 +122,10 @@ const Register = () => {
     resolver: yupResolver(schema)
   })
 
+    /**
+   * Handles form submission.
+   * @param {Object} data - Form data.
+   */
   const onSubmit = data => {
     setLoading(true)
     signup(data.email).then(response => {
@@ -213,7 +222,14 @@ const Register = () => {
     </Box>
   )
 }
+
+/**
+ * Returns the layout for the Register component.
+ * @param {JSX.Element} page - The Register component.
+ * @returns {JSX.Element} Layout for the Register component.
+ */
 Register.getLayout = page => <BlankLayout>{page}</BlankLayout>
+// Indicates that this route doesn't require authentication
 Register.guestGuard = true
 
 export default Register
