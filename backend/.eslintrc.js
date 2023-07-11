@@ -4,7 +4,10 @@ module.exports = {
     'commonjs': true,
     'es2021': true,
   },
-  'extends': 'google',
+  'extends': [
+    'google',
+    'eslint-config-prettier' // Add this line
+  ],
   'overrides': [
     {
       'env': {

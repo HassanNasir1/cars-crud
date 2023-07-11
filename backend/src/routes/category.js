@@ -1,10 +1,7 @@
-const express = require('express');
-const router = new express.Router();
-
-// Import the Category model
-const Category = require('../models/category');
-
-const {authenticateToken} = require('../middlewares/auth');
+const express = require('express')
+const router = new express.Router()
+const { authenticateToken } = require('../middlewares/auth')
+const categoriesService = require('../service/category')
 
 /**
  * Get all categories for dropdown
@@ -18,13 +15,13 @@ const {authenticateToken} = require('../middlewares/auth');
  */
 router.get('/dropdown', async (req, res) => {
   try {
-    const categories = await Category.find().sort({name: 'asc'});
-    res.status(200).json(categories);
+    const categories = await categoriesService.getCategories()
+    res.status(200).json(categories)
   } catch (error) {
-    console.error('Error retrieving categories:', error);
-    res.status(500).json({error: 'An error occurred while retrieving categories'});
+    console.error('Error retrieving categories:', error)
+    res.status(500).json({ error: 'An error occurred while retrieving categories' })
   }
-});
+})
 
 /**
  * Create a category
@@ -38,37 +35,27 @@ router.get('/dropdown', async (req, res) => {
  */
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const {name} = req.body;
+    const { name } = req.body
 
     // Check if the name is provided
     if (!name) {
-      return res.status(400).json({error: 'Name is required'});
+      return res.status(400).json({ error: 'Name is required' })
     }
 
-    // Check if the category with the same name already exists
-    const existingCategory = await Category.findOne({name});
-    if (existingCategory) {
-      return res.status(400).json({error: 'Category with the same name already exists'});
-    }
+    const category = await categoriesService.createCategory(name)
 
-    // Create a new category
-    const category = new Category({name});
-
-    // Save the category to the database
-    await category.save();
-
-    res.status(201).json(category);
+    res.status(201).json(category)
   } catch (error) {
     if (error.name === 'ValidationError') {
       // Handle validation errors
-      const errors = Object.values(error.errors).map((err) => err.message);
-      res.status(400).json({errors});
+      const errors = Object.values(error.errors).map(err => err.message)
+      res.status(400).json({ errors })
     } else {
-      console.error('Error creating category:', error);
-      res.status(500).json({error: 'An error occurred while creating the category'});
+      console.error('Error creating category:', error)
+      res.status(500).json({ error: 'An error occurred while creating the category' })
     }
   }
-});
+})
 
 /**
  * Get all categories
@@ -82,38 +69,16 @@ router.post('/', authenticateToken, async (req, res) => {
  */
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    const {sortBy, sortOrder, page, limit} = req.query;
+    const { sortBy, sortOrder, page, limit } = req.query
 
-    const sortOptions = {};
-    if (sortBy && sortOrder) {
-      sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
-    }
+    const categories = await categoriesService.getAllCategories(sortBy, sortOrder, page, limit)
 
-    const pageNumber = parseInt(page) || 1;
-    const pageSize = parseInt(limit) || 10;
-
-    const totalCategories = await Category.countDocuments();
-
-    const categories = await Category.find()
-        .sort(sortOptions)
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize);
-
-    res.status(200).json({
-      categories,
-      params: {
-        sortBy,
-        sortOrder,
-        page,
-        limit,
-      },
-      totalCategories,
-    });
+    res.status(200).json(categories)
   } catch (error) {
-    console.error('Error retrieving categories:', error);
-    res.status(500).json({error: 'An error occurred while retrieving categories'});
+    console.error('Error retrieving categories:', error)
+    res.status(500).json({ error: 'An error occurred while retrieving categories' })
   }
-});
+})
 
 /**
  * Get a category by ID
@@ -127,21 +92,16 @@ router.get('/', authenticateToken, async (req, res) => {
  */
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params
 
-    // Find the category by ID
-    const category = await Category.findById(id);
+    const category = await categoriesService.getCategoryById(id)
 
-    if (!category) {
-      return res.status(404).json({error: 'Category not found'});
-    }
-
-    res.status(200).json(category);
+    res.status(200).json(category)
   } catch (error) {
-    console.error('Error retrieving category:', error);
-    res.status(500).json({error: 'An error occurred while retrieving the category'});
+    console.error('Error retrieving category:', error)
+    res.status(500).json({ error: 'An error occurred while retrieving the category' })
   }
-});
+})
 
 /**
  * Update a category
@@ -155,42 +115,17 @@ router.get('/:id', authenticateToken, async (req, res) => {
  */
 router.patch('/:id', authenticateToken, async (req, res) => {
   try {
-    const {id} = req.params;
-    const {name} = req.body;
+    const { id } = req.params
+    const { name } = req.body
 
-    // Find the category by ID
-    const category = await Category.findById(id);
+    const category = await categoriesService.updateCategory(id, name)
 
-    if (!category) {
-      return res.status(404).json({error: 'Category not found'});
-    }
-
-    // Check if the name is provided
-    if (!name) {
-      return res.status(400).json({error: 'Category name is required'});
-    }
-
-    // Check if the name is being changed
-    if (category.name !== name) {
-      // Check if the new name already exists
-      const existingCategory = await Category.findOne({name});
-      if (existingCategory) {
-        return res.status(400).json({error: 'Category name already exists'});
-      }
-    }
-
-    // Update the category name
-    category.name = name;
-
-    // Save the updated category to the database
-    await category.save();
-
-    res.status(200).json(category);
+    res.status(200).json(category)
   } catch (error) {
-    console.error('Error updating category:', error);
-    res.status(500).json({error: 'An error occurred while updating the category'});
+    console.error('Error updating category:', error)
+    res.status(500).json({ error: 'An error occurred while updating the category' })
   }
-});
+})
 
 /**
  * Delete a category
@@ -204,20 +139,15 @@ router.patch('/:id', authenticateToken, async (req, res) => {
  */
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params
 
-    // Find the category by ID and remove it
-    const category = await Category.findByIdAndRemove(id);
+    const category = await categoriesService.deleteCategory(id)
 
-    if (!category) {
-      return res.status(404).json({error: 'Category not found'});
-    }
-
-    res.status(200).json({message: 'Category deleted successfully'});
+    res.status(200).json({ message: 'Category deleted successfully', category })
   } catch (error) {
-    console.error('Error deleting category:', error);
-    res.status(500).json({error: 'An error occurred while deleting the category'});
+    console.error('Error deleting category:', error)
+    res.status(500).json({ error: 'An error occurred while deleting the category' })
   }
-});
+})
 
-module.exports = router;
+module.exports = router

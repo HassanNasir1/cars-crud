@@ -32,16 +32,12 @@ function xssMiddleware(req, res, next) {
  * @return {void}
  */
 function sanitizeObject(obj) {
-  console.log(obj);
   for (const [key, value] of Object.entries(obj)) {
     if (typeof value === 'object' && value !== null) {
-      console.log('i am if');
-
       // Recursively sanitize nested objects
       sanitizeObject(value);
     } else if (typeof value === 'string') {
       // Sanitize string values
-      console.log('i am else');
 
       obj[key] = xss(value);
     }
