@@ -44,6 +44,8 @@ const schema = yup.object().shape({
     .min(3, obj => showErrors('name', obj.value.length, obj.min))
     .required()
 })
+
+
 /**
  * AddCategoryForm Component
  * Renders a form for adding or editing a category

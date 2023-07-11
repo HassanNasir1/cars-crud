@@ -187,6 +187,7 @@ const LoginPage = () => {
                       value={value}
                       onBlur={onBlur}
                       onChange={onChange}
+
                       // placeholder='admin@vuexy.com'
                       error={Boolean(errors.email)}
                       {...(errors.email && { helperText: errors.email.message })}
@@ -267,6 +268,7 @@ const LoginPage = () => {
  * @returns {JSX.Element} Layout for the LoginPage component.
  */
 LoginPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
+
 // Indicates that this route doesn't require authentication
 LoginPage.guestGuard = true
 

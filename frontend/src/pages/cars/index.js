@@ -32,10 +32,12 @@ const Cars = () => {
   const [openModal, setOpenModal] = useState(false)
   const [modalRow, setModalRow] = useState(null)
   const [loading, setLoading] = useState(false)
+
   const [queryOptions, setQueryOptions] = useState({
     direction: 'desc',
     column: 'createdAt'
   })
+
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 5,
     page: 0

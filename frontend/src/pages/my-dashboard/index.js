@@ -22,6 +22,7 @@ const MyDashboard = () => {
       })
       .catch(error => {
         console.error('Error retrieving total car count:', error);
+
         // Handle the error
       });
   }, []);

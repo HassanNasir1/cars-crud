@@ -2,10 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
+    "start": "nodemon ./src/server.js",
     "lint": "eslint --fix \"./**/*.{js,jsx}\"",
     "format": "prettier --write \"./**/*.{js,jsx}\"",
     "docs": "jsdoc -c jsdoc.conf.json"
@@ -14,11 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/eslint-parser": "7.21.3",
     "bcrypt": "^5.1.0",
     "better-docs": "^2.7.2",
     "cors": "^2.8.5",
     "entities": "^4.5.0",
-    "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
@@ -30,5 +30,9 @@
     "nodemon": "^2.0.22",
     "prettier": "^3.0.0",
     "xss": "^1.0.14"
+  },
+  "devDependencies": {
+    "eslint": "^8.44.0",
+    "eslint-config-google": "^0.14.0"
   }
 }

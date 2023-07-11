@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 /**
  * User Schema
@@ -19,31 +19,31 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
     trim: true,
-    match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please provide a valid email']
+    match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please provide a valid email'],
   },
   fullName: {
-    type: String
+    type: String,
   },
   username: {
     type: String,
-    unique: true
+    unique: true,
   },
   role: {
-    type: String
+    type: String,
   },
   otp: {
     type: String,
-    required: true
+    required: true,
   },
   isOTPUsed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
-})
+    default: Date.now,
+  },
+});
 
 /**
  * User Model
@@ -55,6 +55,6 @@ const userSchema = new mongoose.Schema({
  * @property {Function} deleteOne - Delete a user based on a query.
  */
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema);
 
-module.exports = User
+module.exports = User;

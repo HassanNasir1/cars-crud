@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 /**
  * Category Schema
@@ -9,17 +9,17 @@ const mongoose = require('mongoose')
  */
 
 const categorySchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-      minlength: 3,
-      maxlength: 50
-    }
-  },
-  { timestamps: true }
-)
+    {
+      name: {
+        type: String,
+        required: true,
+        unique: true,
+        minlength: 3,
+        maxlength: 50,
+      },
+    },
+    {timestamps: true},
+);
 
 /**
  * Category Model
@@ -31,6 +31,6 @@ const categorySchema = new mongoose.Schema(
  * @property {Function} deleteOne - Delete a category based on a query.
  */
 
-const Category = mongoose.model('Category', categorySchema)
+const Category = mongoose.model('Category', categorySchema);
 
-module.exports = Category
+module.exports = Category;

@@ -229,6 +229,7 @@ const Register = () => {
  * @returns {JSX.Element} Layout for the Register component.
  */
 Register.getLayout = page => <BlankLayout>{page}</BlankLayout>
+
 // Indicates that this route doesn't require authentication
 Register.guestGuard = true
 
