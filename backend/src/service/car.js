@@ -3,6 +3,16 @@ const Car = require('../models/car')
 const createCar = async (category, color, model, make, registrationNo, name) => {
   try {
     const car = new Car({ category, color, model, make, registrationNo, name })
+    const validationError = car.validateSync()
+    if (validationError) {
+      const errors = Object.values(validationError.errors).map(err => err.message)
+      throw new Error(errors.join(', '))
+    }
+
+    const existingCar = await Car.findOne({ registrationNo })
+    if (existingCar) {
+      throw new Error('Duplicate registration number')
+    }
     await car.save()
     return car
   } catch (error) {

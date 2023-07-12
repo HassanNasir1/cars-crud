@@ -22,7 +22,7 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(201).json(car)
   } catch (error) {
     console.error('Error creating car:', error)
-    res.status(500).json({ error: 'An error occurred while creating the car' })
+    res.status(500).json({ error: error.message || 'An error occurred while creating the car' })
   }
 })
 
@@ -116,7 +116,7 @@ router.patch('/:id', authenticateToken, async (req, res) => {
     res.status(200).json(updatedCar)
   } catch (error) {
     console.error('Error updating car:', error)
-    res.status(500).json({ error: 'An error occurred while updating the car' })
+    res.status(500).json({ error: error.message || 'An error occurred while updating the car' })
   }
 })
 

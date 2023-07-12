@@ -171,6 +171,7 @@ const Cars = () => {
           open={open}
           setOpen={setOpen}
           handleClose={handlePopUpClose}
+          store={store}
         />
         <DataGrid
           autoHeight

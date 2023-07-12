@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
-const port = 6000;
+const port = 3010;
 const xssMiddleware = require('./middlewares/xss');
 
 // Middleware to parse request body

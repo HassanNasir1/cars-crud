@@ -51,8 +51,7 @@ router.post('/', authenticateToken, async (req, res) => {
       const errors = Object.values(error.errors).map(err => err.message)
       res.status(400).json({ errors })
     } else {
-      console.error('Error creating category:', error)
-      res.status(500).json({ error: 'An error occurred while creating the category' })
+      res.status(500).json({ error: error.message || 'An error occurred while creating the category' })
     }
   }
 })
@@ -75,7 +74,6 @@ router.get('/', authenticateToken, async (req, res) => {
 
     res.status(200).json(categories)
   } catch (error) {
-    console.error('Error retrieving categories:', error)
     res.status(500).json({ error: 'An error occurred while retrieving categories' })
   }
 })
@@ -98,7 +96,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
     res.status(200).json(category)
   } catch (error) {
-    console.error('Error retrieving category:', error)
     res.status(500).json({ error: 'An error occurred while retrieving the category' })
   }
 })
@@ -122,8 +119,7 @@ router.patch('/:id', authenticateToken, async (req, res) => {
 
     res.status(200).json(category)
   } catch (error) {
-    console.error('Error updating category:', error)
-    res.status(500).json({ error: 'An error occurred while updating the category' })
+    res.status(500).json({ error: error.message || 'An error occurred while updating the category' })
   }
 })
 

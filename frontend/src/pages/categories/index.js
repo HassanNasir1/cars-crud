@@ -171,6 +171,7 @@ const Categories = () => {
           open={open}
           setOpen={setOpen}
           handleClose={handlePopUpClose}
+          store={store}
         />
         <DataGrid
           autoHeight
