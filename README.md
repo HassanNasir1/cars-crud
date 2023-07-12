@@ -2,10 +2,13 @@
 
 ## What is this repository for? ##
 
+* This is a fullstack cars crud application built on MERN stack
+
 ### Quick summary ###
 
 * This is a monorepo for cars fullstack application
-* you can find run instructions in each module's README.md file
+* You can find run instructions in each module's README.md file
+* Find technical documentation(jsdoc) for both the frontend and backend under docs folder for both projects
 
 ### Who do I talk to? ###
 
