@@ -50,7 +50,6 @@ export const fetchData = createAsyncThunk('car/fetchData', async params => {
 export const addCar = createAsyncThunk('car/addCar', async (data, { getState, dispatch, rejectWithValue }) => {
   try {
     const response = await axiosInstance.post(`${API_URL.url}/api/cars`, data.data)
-    dispatch(fetchData(getState().cars.params))
 
     return response
   } catch (error) {
@@ -61,6 +60,8 @@ export const addCar = createAsyncThunk('car/addCar', async (data, { getState, di
       // If there is a network or other error, throw an error with a generic message
       throw new Error('An error occurred while adding the category.')
     }
+  } finally {
+    dispatch(fetchData(getState().cars.params))
   }
 })
 
@@ -71,7 +72,6 @@ export const editCar = createAsyncThunk('car/editCar', async (data, { getState, 
 
   try {
     const response = await axiosInstance.patch(`${API_URL.url}/api/cars/${id}`, carData?.data)
-    dispatch(fetchData(getState().cars.params))
 
     return response
   } catch (error) {
@@ -82,6 +82,8 @@ export const editCar = createAsyncThunk('car/editCar', async (data, { getState, 
       // If there is a network or other error, throw an error with a generic message
       throw new Error('An error occurred while editing the category.')
     }
+  } finally {
+    dispatch(fetchData(getState().cars.params))
   }
 })
 

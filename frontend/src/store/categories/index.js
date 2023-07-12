@@ -25,7 +25,6 @@ export const addCategory = createAsyncThunk(
   async (data, { getState, dispatch, rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`${API_URL.url}/api/categories`, data.data)
-      dispatch(fetchData(getState().categories.params))
 
       return response
     } catch (error) {
@@ -36,6 +35,8 @@ export const addCategory = createAsyncThunk(
         // If there is a network or other error, throw an error with a generic message
         throw new Error('An error occurred while adding the category.')
       }
+    } finally {
+      dispatch(fetchData(getState().categories.params))
     }
   }
 )
@@ -49,7 +50,6 @@ export const editCategory = createAsyncThunk(
 
     try {
       const response = await axiosInstance.patch(`${API_URL.url}/api/categories/${id}`, categoryData?.data)
-      dispatch(fetchData(getState().categories.params))
 
       return response
     } catch (error) {
@@ -60,6 +60,8 @@ export const editCategory = createAsyncThunk(
         // If there is a network or other error, throw an error with a generic message
         throw new Error('An error occurred while editing the category.')
       }
+    } finally {
+      dispatch(fetchData(getState().categories.params))
     }
   }
 )
