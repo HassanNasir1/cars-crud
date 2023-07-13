@@ -157,7 +157,7 @@ const AddCarForm = ({ addBtnText, handleClose }) => {
               <CustomTextField
                 fullWidth
                 value={value}
-                label='Category Name'
+                label='Car Name'
                 onChange={onChange}
                 error={Boolean(errors.name)}
                 aria-describedby='validation-schema-name'
