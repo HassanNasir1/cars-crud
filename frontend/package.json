@@ -37,6 +37,7 @@
     "@mui/x-data-grid": "6.0.3",
     "@popperjs/core": "2.11.7",
     "@reduxjs/toolkit": "1.9.5",
+    "@superset-ui/embedded-sdk": "^0.1.0-alpha.10",
     "apexcharts-clevision": "3.28.5",
     "axios": "1.4.0",
     "axios-mock-adapter": "1.21.4",

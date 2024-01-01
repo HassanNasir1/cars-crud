@@ -8,6 +8,12 @@ const navigation = () => {
       icon: 'tabler:smart-home'
     },
     {
+      id: '64915b817bfdb63fe424f992',
+      title: 'Apache Superset',
+      path: '/apache-superset',
+      icon: 'tabler:smart-home'
+    },
+    {
       id: '64916ea55c4fe2498f952b2c',
       title: 'Categories',
       path: '/categories',
