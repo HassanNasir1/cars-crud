@@ -53,7 +53,7 @@ const MyDashboard = () => {
     if (guestToken) {
       embedDashboard({
         id: '1', // Replace with your actual dashboard ID
-        supersetDomain: 'http://192.168.100.70:8088', // Replace with your Superset domain
+        supersetDomain: 'http://192.168.100.69:8088', // Replace with your Superset domain
         mountPoint: document.getElementById('my-superset-container'),
         fetchGuestToken: () => guestToken,
         dashboardUiConfig: {
