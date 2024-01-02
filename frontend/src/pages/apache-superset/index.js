@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid'
-import { getAccessToken, getGuestToken } from 'src/store/apache-superset'
+import { getAccessToken, getGuestToken, getCSRFToken } from 'src/store/apache-superset'
 import { embedDashboard } from '@superset-ui/embedded-sdk'
+import { accessToken } from 'src/configs/endpoint'
 
 /**
  * Function to fetch the guest token from the backend.
@@ -51,9 +52,10 @@ const MyDashboard = () => {
   useEffect(() => {
     // Embed the Superset dashboard when the guest token is available
     if (guestToken) {
+      // const csrfToken = getCSRFToken(token)
       embedDashboard({
-        id: '1', // Replace with your actual dashboard ID
-        supersetDomain: 'http://192.168.100.70:8088', // Replace with your Superset domain
+        id: '5834991a-3a22-42c8-82cd-71f7fa3063b6', // Replace with your actual dashboard ID
+        supersetDomain: 'http://localhost:8088', // Replace with your Superset domain
         mountPoint: document.getElementById('my-superset-container'),
         fetchGuestToken: () => guestToken,
         dashboardUiConfig: {
@@ -61,7 +63,10 @@ const MyDashboard = () => {
           filters: {
             expanded: true
           }
-        }
+        },
+        // headers: {
+        //   'X-CSRFToken': csrfToken
+        // }
       })
     }
   }, [guestToken])
@@ -71,6 +76,14 @@ const MyDashboard = () => {
       <Grid item xs={12}>
         {/* Render the container for the embedded Superset dashboard */}
         <div id='my-superset-container'></div>
+        {/* <iframe
+          width='600'
+          height='400'
+          seamless
+          frameBorder='0'
+          scrolling='no'
+          src='http://localhost:8088/superset/explore/p/ALl76PeODYM/?standalone=1&height=400'
+        ></iframe> */}
       </Grid>
     </Grid>
   )
