@@ -30,6 +30,27 @@ export const getAccessToken = async () => {
   }
 }
 
+// Function to get CSRF token
+export const getCSRFToken = async authToken => {
+  try {
+    const response = await fetch('http://192.168.100.69:8088/api/v1/security/csrf_token', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${authToken}`,
+        Accept: 'application/json'
+      }
+    })
+    const data = await response.json()
+    const csrfToken = data.result
+    console.log('CSRF Token:', csrfToken)
+    return csrfToken
+  } catch (error) {
+    console.error('Error fetching CSRF token:', error)
+    throw error
+  }
+}
+
 // Function to get guest token
 export const getGuestToken = async accessToken => {
   try {
@@ -37,13 +58,21 @@ export const getGuestToken = async accessToken => {
       method: 'POST', // Change the method to POST
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
+        'X-CSRFToken': csrfToken
       },
       body: JSON.stringify({
+        resources: [
+          {
+            type: 'dashboard',
+            id: '5834991a-3a22-42c8-82cd-71f7fa3063b6'
+          }
+        ],
+        rls: [],
         user: {
-          username: 'admin',
-          first_name: 'Superset',
-          last_name: 'Admin'
+          username: 'guest',
+          first_name: 'Guest',
+          last_name: 'User'
         }
       })
     })
