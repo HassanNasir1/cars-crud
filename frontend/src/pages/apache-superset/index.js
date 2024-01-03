@@ -96,7 +96,7 @@ const MyDashboard = () => {
       <Grid item xs={12}>
         {/* Render the container for the embedded Superset dashboard */}
         <div id='my-superset-container'></div>
-        {/* <iframe
+    {/* <iframe
           width='600'
           height='400'
           seamless
