@@ -1,6 +1,8 @@
+import { API_URL } from './endpoint'
+
 export default {
-  meEndpoint: 'http://localhost:3010/api/auth/me',
-  loginEndpoint: 'http://localhost:3010/api/auth/login',
+  meEndpoint: `${API_URL.url}/api/auth/me`,
+  loginEndpoint: `${API_URL.url}/api/auth/login`,
   registerEndpoint: '/jwt/register',
   storageTokenKeyName: 'accessToken',
   onTokenExpiration: 'refreshToken' // logout | refreshToken
