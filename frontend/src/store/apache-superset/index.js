@@ -97,7 +97,6 @@ export const getSupersetToken = async dashboardId => {
     // if (!response?.ok) {
     //   throw new Error(`Request failed with status: ${response.status}`)
     // }
-    console.log(response)
     const jsonData = await response.json()
     return jsonData
   } catch (error) {
