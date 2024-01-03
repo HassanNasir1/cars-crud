@@ -23,11 +23,11 @@ db.once('open', () => {
   console.log('Connected to MongoDB')
 })
 
-const allowedOrigins = ['http://localhost:3034', 'https://superapp.acruxtek.net']
+const allowedOrigins = ['http://localhost:3000', 'https://superapp.acruxtek.net']
 
 // Import and use the authRoutes directly
 app.use(cors())
-app.use(cors({ credentials: true, origin: 'https://superapp.acruxtek.net' }))
+app.use(cors({ credentials: true, origin: allowedOrigins[1] }))
 const authRoutes = require('./routes/auth')
 const categoryRoutes = require('./routes/category')
 const carRoutes = require('./routes/car')

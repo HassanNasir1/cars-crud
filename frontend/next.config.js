@@ -9,6 +9,14 @@ module.exports = {
   trailingSlash: true,
   reactStrictMode: false,
 
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: securityHeaders
+      }
+    ]
+  },
   webpack: config => {
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -18,3 +26,18 @@ module.exports = {
     return config
   }
 }
+
+const securityHeaders = [
+  {
+    key: 'Access-Control-Allow-Origin',
+    value: '*' // Adjust this to allow specific origins if needed
+  },
+  {
+    key: 'Access-Control-Allow-Methods',
+    value: 'GET, POST, OPTIONS, PUT, DELETE'
+  },
+  {
+    key: 'Access-Control-Allow-Headers',
+    value: 'X-Requested-With, Content-Type, Authorization'
+  }
+]
