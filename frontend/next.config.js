@@ -9,14 +9,6 @@ module.exports = {
   trailingSlash: true,
   reactStrictMode: false,
 
-  // async headers() {
-  //   return [
-  //     {
-  //       source: '/(.*)',
-  //       headers: securityHeaders
-  //     }
-  //   ]
-  // },
   webpack: config => {
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -26,18 +18,3 @@ module.exports = {
     return config
   }
 }
-
-// const securityHeaders = [
-//   // {
-//   //   key: 'X-Content-Type-Options',
-//   //   value: 'nosniff'
-//   // },
-//   {
-//     key: 'X-Frame-Options',
-//     value: 'ALLOWALL'
-//   },
-//   {
-//     key: 'Content-Security-Policy',
-//     value: 'frame-ancestors *'
-//   }
-// ]
