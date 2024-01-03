@@ -60,25 +60,41 @@ router.post('/login', async (req, res) => {
 router.get('/me', async (req, res) => {
   try {
     // Get the token from the request headers
-    const token = req.headers.authorization;
-
-    // Decode the token to get the userId
-    const decodedToken = jwt.verify(token, 'your_secret_key');
-    const userId = decodedToken.userId;
-
-    // Find the user by userId
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({error: 'User not found'});
+    // const token = req.headers.authorization;
+ 
+    // // Decode the token to get the userId
+    // const decodedToken = jwt.verify(token, 'your_secret_key');
+    // const userId = decodedToken.userId;
+ 
+    // // Find the user by userId
+    // const user = await User.findById(userId);
+ 
+    // if (!user) {
+    //   return res.status(404).json({error: 'User not found'});
+    // }
+ 
+    const user = {
+      _id: {
+        $oid: '65657b38b431a5e04a872131'
+      },
+      email: 'hassan@yopmail.com',
+      fullName: 'hassan',
+      username: 'hassan@yopmail.com',
+      role: 'admin',
+      otp: '$2b$10$3yioNmzWMUAYjKk1Nad16eJuL9VwX/Z8PDINXnOAxUedWunAEd64W',
+      isOTPUsed: false,
+      createdAt: {
+        $date: '2023-11-28T05:31:36.143Z'
+      },
+      __v: 0
     }
-
+ 
     // Return the complete userData
-    res.status(200).json({user});
+    res.status(200).json({ user })
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).json({error: 'An error occurred while fetching user data'});
+    console.error('Error fetching user data:', error)
+    res.status(500).json({ error: 'An error occurred while fetching user data' })
   }
-});
+})
 
 module.exports = router;
