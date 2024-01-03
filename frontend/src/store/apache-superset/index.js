@@ -31,17 +31,18 @@ export const getAccessToken = async () => {
 }
 
 // Function to get CSRF token
-export const getCSRFToken = async authToken => {
+export const getCSRFToken = async accessToken => {
   try {
     const response = await fetch('http://localhost:8088/api/v1/security/csrf_token', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `${authToken}`,
+        Authorization: `Bearer ${accessToken}`,
         Accept: 'application/json'
       }
     })
     const data = await response.json()
+    console.log(data)
     const csrfToken = data.result
     console.log('CSRF Token:', csrfToken)
     return csrfToken
@@ -52,9 +53,9 @@ export const getCSRFToken = async authToken => {
 }
 
 // Function to get guest token
-export const getGuestToken = async accessToken => {
+export const getGuestToken = async (accessToken, csrfToken) => {
   try {
-    const csrfToken = await getCSRFToken(accessToken)
+    // console.log(csrfToken)
     const response = await fetch('http://localhost:8088/api/v1/security/guest_token/', {
       method: 'POST',
       headers: {
@@ -81,6 +82,23 @@ export const getGuestToken = async accessToken => {
     const data = await response.json()
     const guestToken = data.guest_token
     return guestToken
+  } catch (error) {
+    console.error('Error getting guest token:', error)
+    throw error
+  }
+}
+
+export const getSupersetToken = async dashboardId => {
+  try {
+    const response = await fetch(`http://localhost:3010/api/superset_token?dashboardId=${dashboardId}`, {
+      method: 'GET',
+      credentials: 'include'
+    })
+    // if (!response?.ok) {
+    //   throw new Error(`Request failed with status: ${response.status}`)
+    // }
+    const jsonData = await response.json()
+    return jsonData
   } catch (error) {
     console.error('Error getting guest token:', error)
     throw error

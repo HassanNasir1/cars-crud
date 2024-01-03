@@ -1,33 +1,95 @@
 const express = require('express')
 const csrfRoute = express.Router()
+const axios = require('axios')
+const cookieParser = require('cookie-parser')
 
-/**
- * Get CSRF token
- * @name GET /csrf_token
- * @function
- * @memberof module:routes/csrf
- * @inner
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {Object} Response object with the CSRF token or error
- */
-csrfRoute.get('/csrf_token', (req, res) => {
+csrfRoute.use(cookieParser())
+
+// Define the backend link
+const backendLink = 'http://localhost:8088/api/v1'
+const userCredentials = {
+  username: 'guest',
+  first_name: 'Guest',
+  last_name: 'User'
+}
+
+// CSRF route
+csrfRoute.get('/', async (req, res) => {
   try {
-    // Generate or retrieve the CSRF token logic
-    const csrfToken = generateCSRFToken() // Replace with your logic
+    const { dashboardId } = req.query
+    const sessionCookie = req.headers.cookie
 
-    res.status(200).json({ csrfToken })
+    // Request configuration for /security/login
+    const loginConfig = {
+      method: 'post',
+      url: `${backendLink}/security/login`,
+      data: {
+        username: 'admin',
+        password: 'admin',
+        provider: 'db',
+        refresh: true
+      }
+    }
+
+    // Make a request to /security/login
+    const loginResponse = await axios(loginConfig)
+
+    // Extract accessToken from the response
+    const accessToken = loginResponse.data.access_token
+    const refreshToken = loginResponse.data.refresh_token
+
+    // Request configuration for /security/csrf_token
+    const csrfConfig = {
+      method: 'get',
+      url: `${backendLink}/security/csrf_token`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Cookie: sessionCookie
+      }
+    }
+
+    // Make a request to /security/csrf_token
+    const csrfResponse = await axios(csrfConfig)
+
+    // Extract csrfToken from the response
+    const csrfToken = csrfResponse.data.result
+
+    // Retrieve session cookie from the request headers
+
+    // Request configuration for /security/guest_token
+    const guestTokenConfig = {
+      method: 'post',
+      url: `${backendLink}/security/guest_token/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'X-CSRFToken': csrfToken,
+        Cookie: sessionCookie
+      },
+      withCredentials: true,
+      data: {
+        resources: [
+          {
+            type: 'dashboard',
+            id: dashboardId
+          }
+        ],
+        rls: [],
+        user: userCredentials
+      }
+    }
+
+    // Make a request to /security/guest_token
+    const guestTokenResponse = await axios(guestTokenConfig)
+
+    console.log('hassan', guestTokenResponse.data.token)
+    const guestToken = guestTokenResponse.data.token
+
+    // Respond with the accessToken
+    res.status(200).json({ accessToken, refreshToken, csrfToken, guestToken })
   } catch (error) {
-    console.error('Error fetching CSRF token:', error)
-    res.status(500).json({ error: 'An error occurred while fetching CSRF token' })
+    console.error('Error fetching', error.message)
+    res.status(500).json({ error: 'An error occurred while fetching accessToken' })
   }
 })
-
-// Replace this function with your actual CSRF token generation logic
-function generateCSRFToken() {
-  // Your CSRF token generation logic here
-  const csrfToken = 'your_generated_csrf_token'
-  return csrfToken
-}
 
 module.exports = csrfRoute

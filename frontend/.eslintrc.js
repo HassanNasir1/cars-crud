@@ -24,31 +24,19 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'import/no-anonymous-default-export': 'off',
 
-    // add new line above comment
-    'lines-around-comment': [
-      'error',
-      {
-        beforeLineComment: true,
-        beforeBlockComment: true,
-        allowBlockStart: true,
-        allowClassStart: true,
-        allowObjectStart: true,
-        allowArrayStart: true
-      }
-    ],
+    // Disable eslint-plugin-react-hooks exhaustive-deps rule
+    'react-hooks/exhaustive-deps': 'off',
 
-    // add new line above return
-    'newline-before-return': 'error',
+    // Add new line above comment
+    'lines-around-comment': 'off',
 
-    // add new line below import
-    'import/newline-after-import': [
-      'error',
-      {
-        count: 1
-      }
-    ],
+    // Add new line above return
+    'newline-before-return': 'off',
 
-    // add new line after each var, const, let declaration
+    // Add new line below import
+    'import/newline-after-import':'off',
+
+    // Add new line after each var, const, let declaration
     'padding-line-between-statements': [
       'error',
       { blankLine: 'always', prev: ['export'], next: ['*'] },

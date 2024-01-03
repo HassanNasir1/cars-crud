@@ -25,15 +25,16 @@ db.once('open', () => {
 
 // Import and use the authRoutes directly
 app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/category');
 const carRoutes = require('./routes/car');
-const csrfRoutes = require('./routes/csrf');
+const tokenRoutes = require('./routes/csrf');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/cars', carRoutes);
-app.use('/api/csrf_token', carRoutes);
+app.use('/api/superset_token', tokenRoutes);
 
 // Start the server
 app.listen(port, () => {
