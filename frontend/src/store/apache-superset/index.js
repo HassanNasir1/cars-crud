@@ -90,7 +90,7 @@ export const getGuestToken = async (accessToken, csrfToken) => {
 
 export const getSupersetToken = async dashboardId => {
   try {
-    const response = await fetch(`http://localhost:3010/api/superset_token?dashboardId=${dashboardId}`, {
+    const response = await fetch(`${API_URL.url}/api/superset_token?dashboardId=${dashboardId}`, {
       method: 'GET',
       credentials: 'include'
     })
