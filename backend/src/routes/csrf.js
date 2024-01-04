@@ -6,7 +6,8 @@ const cookieParser = require('cookie-parser')
 csrfRoute.use(cookieParser())
 
 // Define the backend link
-const backendLink = 'http://localhost:8088/api/v1'
+// const backendLink = 'http://localhost:8088/api/v1'
+const backendLink = 'https://superset.acruxtek.net/api/v1'
 const userCredentials = {
   username: 'guest',
   first_name: 'Guest',
@@ -25,7 +26,7 @@ csrfRoute.get('/', async (req, res) => {
       url: `${backendLink}/security/login`,
       data: {
         username: 'admin',
-        password: 'admin',
+        password: 'admin931',
         provider: 'db',
         refresh: true
       }
@@ -37,6 +38,13 @@ csrfRoute.get('/', async (req, res) => {
     // Extract accessToken from the response
     const accessToken = loginResponse.data.access_token
     const refreshToken = loginResponse.data.refresh_token
+
+    // console.log("accessToken",accessToken);
+
+    // console.log("params",{
+    //   Authorization: `Bearer ${accessToken}`,
+    //   Cookie: sessionCookie
+    // });
 
     // Request configuration for /security/csrf_token
     const csrfConfig = {
@@ -53,6 +61,8 @@ csrfRoute.get('/', async (req, res) => {
 
     // Extract csrfToken from the response
     const csrfToken = csrfResponse.data.result
+
+    // console.log("csrf",csrfToken);
 
     // Retrieve session cookie from the request headers
 
@@ -81,14 +91,14 @@ csrfRoute.get('/', async (req, res) => {
     // Make a request to /security/guest_token
     const guestTokenResponse = await axios(guestTokenConfig)
 
-    console.log('hassan', guestTokenResponse.data.token)
+    // console.log('hassan', guestTokenResponse.data.token)
     const guestToken = guestTokenResponse.data.token
 
     // Respond with the accessToken
     res.status(200).json({ accessToken, refreshToken, csrfToken, guestToken })
   } catch (error) {
-    console.error('Error fetching', error.message)
-    res.status(500).json({ error: 'An error occurred while fetching accessToken' })
+    console.error('Error fetching', error.response.data)
+    res.status(500).json({ error })
   }
 })
 
