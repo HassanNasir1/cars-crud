@@ -20,6 +20,17 @@ csrfRoute.get('/', async (req, res) => {
     const { dashboardId } = req.query
     const sessionCookie = req.headers.cookie
 
+    // console.log('config', {
+    //   method: 'post',
+    //   url: `${backendLink}/security/login`,
+    //   data: {
+    //     username: 'admin',
+    //     password: 'admin931',
+    //     provider: 'db',
+    //     refresh: true
+    //   }
+    // })
+
     // Request configuration for /security/login
     const loginConfig = {
       method: 'post',
@@ -39,12 +50,12 @@ csrfRoute.get('/', async (req, res) => {
     const accessToken = loginResponse.data.access_token
     const refreshToken = loginResponse.data.refresh_token
 
-    // console.log("accessToken",accessToken);
+    // console.log('accessToken', accessToken)
 
-    // console.log("params",{
+    // console.log('params', {
     //   Authorization: `Bearer ${accessToken}`,
     //   Cookie: sessionCookie
-    // });
+    // })
 
     // Request configuration for /security/csrf_token
     const csrfConfig = {
@@ -62,7 +73,7 @@ csrfRoute.get('/', async (req, res) => {
     // Extract csrfToken from the response
     const csrfToken = csrfResponse.data.result
 
-    // console.log("csrf",csrfToken);
+    // console.log('csrf', csrfToken)
 
     // Retrieve session cookie from the request headers
 
