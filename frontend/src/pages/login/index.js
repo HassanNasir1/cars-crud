@@ -41,6 +41,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+import MyDashboard from '../apache-superset'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -152,11 +153,12 @@ const LoginPage = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} />
-          <FooterIllustrationsV2 />
+          <MyDashboard/>
+          {/* <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} />
+          <FooterIllustrationsV2 /> */}
         </Box>
       ) : null}
-      <RightWrapper>
+      {/* <RightWrapper>
         <Box
           sx={{
             p: [6, 12],
@@ -257,7 +259,7 @@ const LoginPage = () => {
             </form>
           </Box>
         </Box>
-      </RightWrapper>
+      </RightWrapper> */}
     </Box>
   )
 }
